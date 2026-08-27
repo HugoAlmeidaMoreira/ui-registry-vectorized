@@ -48,7 +48,13 @@ npx shadcn@latest add @vectorized/switch
 | **Switch** | `switch` | Radix-backed drop-in switch with the reference skeuomorphic treatment (or compact shadcn appearance). |
 | **Utils** | `utils` | Standard `cn` helper combining `clsx` and `tailwind-merge`. |
 
-`Switch` uses the reference treatment by default. Set `appearance="default"` for the compact shadcn treatment.
+`Switch` uses the reference treatment by default. The `appearance` prop selects the visual treatment:
+
+| `appearance` | Canvas | What it draws |
+|---|---|---|
+| `reference` *(default)* | 160×80 | Full skeuomorphic treatment: outer rim, outer shell, trail and thumb. |
+| `bare` | 132×60 | Same trail and thumb, no outer rim and no outer shell. The canvas is cropped to the trail+thumb union, so the control is proportionally shorter (md renders 39.6×18 instead of 48×24). |
+| `default` | — | Compact shadcn treatment. |
 
 ---
 

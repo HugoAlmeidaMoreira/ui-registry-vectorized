@@ -3,6 +3,30 @@ import * as SwitchPrimitives from "@radix-ui/react-switch"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/registry/lib/utils"
 
+/**
+ * Reference canvas geometry, in the 160x80 space the original CSS was drawn in
+ * (see landing/switch.txt). Every nested offset, radius and effect below is
+ * expressed in that space and scaled uniformly by --skeuomorphic-scale.
+ *
+ *   track  x  20..140  y 15..65   (120x50)
+ *   thumb  x  15..146  y 10..70   (60x60, unchecked at 15, checked at 86)
+ *
+ * The "bare" appearance drops the outer rim and shell, so its canvas is cropped
+ * to the union of track and thumb. That crop is 132x60 and shares the 160x80
+ * centre (80, 40), so the canvas stays centred and needs no re-origin.
+ *
+ *   size | scale | reference 160x80 | bare 132x60
+ *   sm   | 0.20  |      32 x 16     |  26.4 x 12
+ *   md   | 0.30  |      48 x 24     |  39.6 x 18
+ *   lg   | 0.35  |      56 x 28     |  46.2 x 21
+ */
+const SKEUOMORPHIC_TRACK = "overflow-visible rounded-[25px]"
+
+const SKEUOMORPHIC_TRACK_INNER = "rounded-[23px]"
+
+const SKEUOMORPHIC_THUMB =
+  "absolute top-[10px] left-[15px] z-10 h-[60px] w-[60px] !bg-[linear-gradient(to_top,#9e9e9e_20%,#f4f4f4)] shadow-[0_5px_10px_0_rgba(0,0,0,0.7)] transition-[left] duration-200 after:pointer-events-none after:absolute after:top-1 after:left-1 after:z-0 after:h-[52px] after:w-[52px] after:rounded-full after:bg-[#d5d4d4] after:content-[''] data-[state=checked]:left-[86px] data-[state=unchecked]:left-[15px] [&_svg]:relative [&_svg]:z-10"
+
 const switchVariants = cva(
   "group peer inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
   {
@@ -22,6 +46,10 @@ const switchVariants = cva(
         default: "",
         reference:
           "relative appearance-none rounded-full border-0 bg-[linear-gradient(to_bottom,#969494,#fff)] shadow-[0_2px_0_0_#fff,0_-2px_0_0_#969494] before:pointer-events-none before:absolute before:[inset:calc(2px_*_var(--skeuomorphic-scale,0.3))] before:rounded-full before:bg-[linear-gradient(to_bottom,#9e9e9e_30%,#f4f4f4)]",
+        // No outer rim and no outer shell: the root carries no surface of its
+        // own, only the focus ring. overflow-visible lets the thumb shadow
+        // spill past the cropped canvas without affecting the layout box.
+        bare: "relative appearance-none overflow-visible rounded-full border-0 bg-transparent",
       },
     },
     compoundVariants: [
@@ -54,18 +82,28 @@ const switchVariants = cva(
   }
 )
 
-const skeuomorphicSizeVariants = cva("", {
-  variants: {
-    size: {
-      sm: "h-4 w-8 [--skeuomorphic-scale:0.2]",
-      md: "h-6 w-12 [--skeuomorphic-scale:0.3]",
-      lg: "h-7 w-14 [--skeuomorphic-scale:0.35]",
+const skeuomorphicSizeVariants = cva(
+  "w-[calc(var(--skeuomorphic-canvas-w)_*_var(--skeuomorphic-scale))] h-[calc(var(--skeuomorphic-canvas-h)_*_var(--skeuomorphic-scale))]",
+  {
+    variants: {
+      size: {
+        sm: "[--skeuomorphic-scale:0.2]",
+        md: "[--skeuomorphic-scale:0.3]",
+        lg: "[--skeuomorphic-scale:0.35]",
+      },
+      appearance: {
+        default: "",
+        reference:
+          "[--skeuomorphic-canvas-w:160px] [--skeuomorphic-canvas-h:80px]",
+        bare: "[--skeuomorphic-canvas-w:132px] [--skeuomorphic-canvas-h:60px]",
+      },
     },
-  },
-  defaultVariants: {
-    size: "md",
-  },
-})
+    defaultVariants: {
+      size: "md",
+      appearance: "reference",
+    },
+  }
+)
 
 const skeuomorphicCanvasVariants = cva(
   "pointer-events-none absolute top-1/2 left-1/2 h-[80px] w-[160px] -translate-x-1/2 -translate-y-1/2 scale-[var(--skeuomorphic-scale)] [transform-origin:center]"
@@ -77,7 +115,8 @@ const trackVariants = cva(
     variants: {
       appearance: {
         default: "overflow-visible rounded-[18px]",
-        reference: "overflow-visible rounded-[25px]",
+        reference: SKEUOMORPHIC_TRACK,
+        bare: SKEUOMORPHIC_TRACK,
       },
     },
     defaultVariants: {
@@ -92,7 +131,8 @@ const trackInnerVariants = cva(
     variants: {
       appearance: {
         default: "rounded-[16px]",
-        reference: "rounded-[23px]",
+        reference: SKEUOMORPHIC_TRACK_INNER,
+        bare: SKEUOMORPHIC_TRACK_INNER,
       },
       variant: {
         default:
@@ -123,8 +163,8 @@ const thumbVariants = cva(
       },
       appearance: {
         default: "",
-        reference:
-          "absolute top-[10px] left-[15px] z-10 h-[60px] w-[60px] !bg-[linear-gradient(to_top,#9e9e9e_20%,#f4f4f4)] shadow-[0_5px_10px_0_rgba(0,0,0,0.7)] transition-[left] duration-200 after:pointer-events-none after:absolute after:top-1 after:left-1 after:z-0 after:h-[52px] after:w-[52px] after:rounded-full after:bg-[#d5d4d4] after:content-[''] data-[state=checked]:left-[86px] data-[state=unchecked]:left-[15px] [&_svg]:relative [&_svg]:z-10",
+        reference: SKEUOMORPHIC_THUMB,
+        bare: SKEUOMORPHIC_THUMB,
       },
     },
     defaultVariants: {
@@ -155,9 +195,10 @@ export interface SwitchVectorizedProps
   loading?: boolean
   /**
    * Visual treatment for the switch. The reference treatment is the default;
-   * pass "default" for the compact shadcn treatment.
+   * pass "bare" for the same drawing without the outer rim and shell, or
+   * "default" for the compact shadcn treatment.
    */
-  appearance?: "default" | "reference"
+  appearance?: "default" | "reference" | "bare"
 }
 
 export const SwitchVectorized = React.forwardRef<
@@ -188,7 +229,7 @@ export const SwitchVectorized = React.forwardRef<
     )
 
     const isChecked = isControlled ? Boolean(checked) : internalChecked
-    const isSkeuomorphic = appearance === "reference"
+    const isSkeuomorphic = appearance === "reference" || appearance === "bare"
 
     const handleChange = (newChecked: boolean) => {
       if (loading) return
@@ -240,7 +281,7 @@ export const SwitchVectorized = React.forwardRef<
             variant,
             appearance,
           }),
-          isSkeuomorphic ? skeuomorphicSizeVariants({ size }) : null,
+          isSkeuomorphic ? skeuomorphicSizeVariants({ size, appearance }) : null,
           className,
         )}
         checked={isChecked}
