@@ -18,6 +18,6 @@
       "@/registry/*": ["./registry/*"]
     }
   },
-  "include": ["registry/**/*", "scripts/**/*"],
+  "include": ["registry/**/*", "scripts/**/*", "preview/**/*", "vite.config.ts"],
   "exclude": ["node_modules", "public/r"]
 }
