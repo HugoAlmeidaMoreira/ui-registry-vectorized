@@ -52,9 +52,25 @@ npx shadcn@latest add @vectorized/switch
 
 | `appearance` | Canvas | What it draws |
 |---|---|---|
-| `reference` *(default)* | 160×80 | Full skeuomorphic treatment: outer rim, outer shell, trail and thumb. |
-| `bare` | 132×60 | Same trail and thumb, no outer rim and no outer shell. The canvas is cropped to the trail+thumb union, so the control is proportionally shorter (md renders 39.6×18 instead of 48×24). |
+| `reference` *(default)* | 140×80 | Full skeuomorphic treatment: outer rim, outer shell, body and thumb. |
+| `bare` | 112×66 | No outer rim and no outer shell. The body (112×60) fills the window's width and the thumb is 66×66. md renders 33.6×19.8, against 42×24 for `reference`. |
 | `default` | — | Compact shadcn treatment. |
+
+### Layers and state
+
+Both skeuomorphic appearances draw in layers, and **every layer carries its own
+`data-state="checked" | "unchecked"`** — the canvas, the body, the inset fill
+and the thumb. Each layer is styled off its own attribute, and external CSS can
+target any of them.
+
+The thumb hosts the icon layer. The icon is sized as a fraction of the thumb, so it scales
+with it, and it recolours with the state (grey when off, emerald when on).
+
+```tsx
+<Switch thumbIcon={<StandbyIcon />} />
+<Switch thumbIcon={(checked) => (checked ? <OnIcon /> : <OffIcon />)} />
+<Switch checkedIcon={<OnIcon />} uncheckedIcon={<OffIcon />} />
+```
 
 ---
 

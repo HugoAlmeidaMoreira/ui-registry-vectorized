@@ -155,6 +155,22 @@ function GeometryPieceCard({ piece, index }: { piece: GeometryPiece; index: numb
   )
 }
 
+function StandbyIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.5}
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M12 3.5v8.5" />
+      <path d="M18.4 6.6a9 9 0 1 1-12.8 0" />
+    </svg>
+  )
+}
+
 function App() {
   const [checked, setChecked] = React.useState(true)
   const [loading, setLoading] = React.useState(false)
@@ -232,8 +248,9 @@ function App() {
           <div>
             <h2 className="text-lg font-semibold">Appearance: reference vs bare</h2>
             <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-              <code>bare</code> keeps the track and the thumb but drops the outer rim and the outer
-              shell, so its canvas is cropped from 160x80 to 132x60 around the same centre.
+              <code>bare</code> keeps the body and the thumb but drops the outer rim and the outer
+              shell. Both appearances are 20 shorter than the original drawing. The bare window is
+              112x66 around the same centre, and its body fills it.
             </p>
           </div>
           <div className="mt-6 grid gap-6 sm:grid-cols-2">
@@ -242,7 +259,7 @@ function App() {
                 <div className="flex items-center justify-between gap-3">
                   <code className="text-sm font-medium">appearance=&quot;{appearance}&quot;</code>
                   <span className="text-xs text-muted-foreground">
-                    {appearance === "reference" ? "canvas 160\u00d780" : "canvas 132\u00d760"}
+                    {appearance === "reference" ? "window 140\u00d780" : "window 112\u00d766"}
                   </span>
                 </div>
                 <div className="mt-4 flex items-end justify-center gap-8 rounded-lg bg-[#dbdbdb] p-8">
@@ -251,7 +268,8 @@ function App() {
                       <Switch
                         appearance={appearance}
                         size={size}
-                        defaultChecked
+                        thumbIcon={<StandbyIcon />}
+                        defaultChecked={size !== "md"}
                         aria-label={`${appearance} ${size}`}
                       />
                       <span className="text-[10px] font-medium text-neutral-600">{size}</span>

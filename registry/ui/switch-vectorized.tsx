@@ -8,24 +8,42 @@ import { cn } from "@/registry/lib/utils"
  * (see landing/switch.txt). Every nested offset, radius and effect below is
  * expressed in that space and scaled uniformly by --skeuomorphic-scale.
  *
- *   track  x  20..140  y 15..65   (120x50)
- *   thumb  x  15..146  y 10..70   (60x60, unchecked at 15, checked at 86)
+ * Both appearances are shortened by 20 against the original drawing, taken off
+ * the length only and split evenly at both ends, so the thumb keeps its margins
+ * to the window edges and only its travel shrinks.
  *
- * The "bare" appearance drops the outer rim and shell, so its canvas is cropped
- * to the union of track and thumb. That crop is 132x60 and shares the 160x80
- * centre (80, 40), so the canvas stays centred and needs no re-origin.
+ *   reference  window x  10..150  y  0..80  (140x80)
+ *              body   x  30..130  y 15..65  (100x50, radius 25)
+ *              thumb  x  25..136  y 10..70  (60x60, off at 25, on at 76,
+ *                     travel 51, overhanging the body by 5 left and 6 right)
+ *
+ * The "bare" appearance drops the outer rim and shell, so its body fills the
+ * whole window. Its thumb is 66 -- taller than the 60-tall body, so it overhangs
+ * by 3 above and below, exactly as the reference thumb overhangs its own body:
+ *
+ *   bare       window x  24..136  y  7..73  (112x66)
+ *              body   x  24..136  y 10..70  (112x60, radius 30, padding 2)
+ *              inset  108x56 (radius 28)
+ *              thumb  x  24..136  y  7..73  (66x66, off at 24, on at 70,
+ *                     travel 46)
+ *
+ * Every window shares the 160x80 canvas centre (80, 40), so the canvas stays
+ * centred and needs no re-origin. The bare thumb's inner disc and drop shadow
+ * are scaled by 66/60 = 1.1 from the reference values, per rule 6 in AGENTS.md.
  *
  *   size | scale | reference 160x80 | bare 132x60
  *   sm   | 0.20  |      32 x 16     |  26.4 x 12
  *   md   | 0.30  |      48 x 24     |  39.6 x 18
  *   lg   | 0.35  |      56 x 28     |  46.2 x 21
  */
-const SKEUOMORPHIC_TRACK = "overflow-visible rounded-[25px]"
+const SKEUOMORPHIC_THUMB_BASE =
+  "absolute z-10 !bg-[linear-gradient(to_top,#9e9e9e_20%,#f4f4f4)] transition-[left,color] duration-200 after:pointer-events-none after:absolute after:z-0 after:rounded-full after:bg-[#d5d4d4] after:content-[''] data-[state=unchecked]:text-[#6b6b6b] data-[state=checked]:text-emerald-700 [&_svg]:relative [&_svg]:z-10 [&_svg]:h-[42%] [&_svg]:w-[42%]"
 
-const SKEUOMORPHIC_TRACK_INNER = "rounded-[23px]"
+const REFERENCE_THUMB =
+  `${SKEUOMORPHIC_THUMB_BASE} top-[10px] h-[60px] w-[60px] shadow-[0_5px_10px_0_rgba(0,0,0,0.7)] after:top-[4px] after:left-[4px] after:h-[52px] after:w-[52px] data-[state=unchecked]:left-[25px] data-[state=checked]:left-[76px]`
 
-const SKEUOMORPHIC_THUMB =
-  "absolute top-[10px] left-[15px] z-10 h-[60px] w-[60px] !bg-[linear-gradient(to_top,#9e9e9e_20%,#f4f4f4)] shadow-[0_5px_10px_0_rgba(0,0,0,0.7)] transition-[left] duration-200 after:pointer-events-none after:absolute after:top-1 after:left-1 after:z-0 after:h-[52px] after:w-[52px] after:rounded-full after:bg-[#d5d4d4] after:content-[''] data-[state=checked]:left-[86px] data-[state=unchecked]:left-[15px] [&_svg]:relative [&_svg]:z-10"
+const BARE_THUMB =
+  `${SKEUOMORPHIC_THUMB_BASE} top-[7px] h-[66px] w-[66px] shadow-[0_5.5px_11px_0_rgba(0,0,0,0.7)] after:top-[4.4px] after:left-[4.4px] after:h-[57.2px] after:w-[57.2px] data-[state=unchecked]:left-[24px] data-[state=checked]:left-[70px]`
 
 const switchVariants = cva(
   "group peer inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
@@ -94,8 +112,8 @@ const skeuomorphicSizeVariants = cva(
       appearance: {
         default: "",
         reference:
-          "[--skeuomorphic-canvas-w:160px] [--skeuomorphic-canvas-h:80px]",
-        bare: "[--skeuomorphic-canvas-w:132px] [--skeuomorphic-canvas-h:60px]",
+          "[--skeuomorphic-canvas-w:140px] [--skeuomorphic-canvas-h:80px]",
+        bare: "[--skeuomorphic-canvas-w:112px] [--skeuomorphic-canvas-h:66px]",
       },
     },
     defaultVariants: {
@@ -110,13 +128,14 @@ const skeuomorphicCanvasVariants = cva(
 )
 
 const trackVariants = cva(
-  "pointer-events-none absolute top-1/2 left-1/2 h-[50px] w-[120px] -translate-x-1/2 -translate-y-1/2 bg-[linear-gradient(to_bottom,#8b8c8e_20%,#f4f4f4)] p-[2px]",
+  "pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-visible bg-[linear-gradient(to_bottom,#8b8c8e_20%,#f4f4f4)] p-[2px]",
   {
     variants: {
       appearance: {
-        default: "overflow-visible rounded-[18px]",
-        reference: SKEUOMORPHIC_TRACK,
-        bare: SKEUOMORPHIC_TRACK,
+        default: "h-[50px] w-[120px] rounded-[18px]",
+        reference: "h-[50px] w-[100px] rounded-[25px]",
+        // No shell to sit inside, so the body fills the cropped canvas.
+        bare: "h-[60px] w-[112px] rounded-[30px]",
       },
     },
     defaultVariants: {
@@ -131,18 +150,18 @@ const trackInnerVariants = cva(
     variants: {
       appearance: {
         default: "rounded-[16px]",
-        reference: SKEUOMORPHIC_TRACK_INNER,
-        bare: SKEUOMORPHIC_TRACK_INNER,
+        reference: "rounded-[23px]",
+        bare: "rounded-[28px]",
       },
       variant: {
         default:
-          "bg-[#828080] shadow-[inset_0_0_30px_0_rgba(0,0,0,0.8)] group-data-[state=checked]:bg-[#f7931e] group-data-[state=checked]:shadow-[inset_0_0_30px_0_rgba(0,0,0,0.6)]",
+          "bg-[#828080] shadow-[inset_0_0_30px_0_rgba(0,0,0,0.8)] data-[state=checked]:bg-[#f7931e] data-[state=checked]:shadow-[inset_0_0_30px_0_rgba(0,0,0,0.6)]",
         success:
-          "bg-[#828080] shadow-[inset_0_0_30px_0_rgba(0,0,0,0.8)] group-data-[state=checked]:bg-emerald-600 group-data-[state=checked]:shadow-[inset_0_0_30px_0_rgba(0,0,0,0.6)]",
+          "bg-[#828080] shadow-[inset_0_0_30px_0_rgba(0,0,0,0.8)] data-[state=checked]:bg-emerald-600 data-[state=checked]:shadow-[inset_0_0_30px_0_rgba(0,0,0,0.6)]",
         warning:
-          "bg-[#828080] shadow-[inset_0_0_30px_0_rgba(0,0,0,0.8)] group-data-[state=checked]:bg-amber-600 group-data-[state=checked]:shadow-[inset_0_0_30px_0_rgba(0,0,0,0.6)]",
+          "bg-[#828080] shadow-[inset_0_0_30px_0_rgba(0,0,0,0.8)] data-[state=checked]:bg-amber-600 data-[state=checked]:shadow-[inset_0_0_30px_0_rgba(0,0,0,0.6)]",
         destructive:
-          "bg-[#828080] shadow-[inset_0_0_30px_0_rgba(0,0,0,0.8)] group-data-[state=checked]:bg-destructive group-data-[state=checked]:shadow-[inset_0_0_30px_0_rgba(0,0,0,0.6)]",
+          "bg-[#828080] shadow-[inset_0_0_30px_0_rgba(0,0,0,0.8)] data-[state=checked]:bg-destructive data-[state=checked]:shadow-[inset_0_0_30px_0_rgba(0,0,0,0.6)]",
       },
     },
     defaultVariants: {
@@ -163,8 +182,8 @@ const thumbVariants = cva(
       },
       appearance: {
         default: "",
-        reference: SKEUOMORPHIC_THUMB,
-        bare: SKEUOMORPHIC_THUMB,
+        reference: REFERENCE_THUMB,
+        bare: BARE_THUMB,
       },
     },
     defaultVariants: {
@@ -230,6 +249,9 @@ export const SwitchVectorized = React.forwardRef<
 
     const isChecked = isControlled ? Boolean(checked) : internalChecked
     const isSkeuomorphic = appearance === "reference" || appearance === "bare"
+    // Every layer carries the state, so each one can be styled off its own
+    // data-state and shows up in the DOM for external CSS to target.
+    const dataState = isChecked ? "checked" : "unchecked"
 
     const handleChange = (newChecked: boolean) => {
       if (loading) return
@@ -292,9 +314,16 @@ export const SwitchVectorized = React.forwardRef<
         {...props}
       >
         {isSkeuomorphic ? (
-          <span aria-hidden="true" className={cn(skeuomorphicCanvasVariants())}>
-            <span className={cn(trackVariants({ appearance }))}>
-              <span className={cn(trackInnerVariants({ variant, appearance }))} />
+          <span
+            aria-hidden="true"
+            data-state={dataState}
+            className={cn(skeuomorphicCanvasVariants())}
+          >
+            <span data-state={dataState} className={cn(trackVariants({ appearance }))}>
+              <span
+                data-state={dataState}
+                className={cn(trackInnerVariants({ variant, appearance }))}
+              />
             </span>
             <SwitchPrimitives.Thumb
               className={cn(thumbVariants({ size: null, appearance }))}
