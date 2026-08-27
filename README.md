@@ -12,6 +12,9 @@ You can add any component directly to your project using the shadcn CLI:
 # Add custom switch (with size variants, icons, and loading state)
 npx shadcn@latest add https://raw.githubusercontent.com/HugoAlmeidaMoreira/ui-registry-vectorized/main/public/r/custom-switch.json
 
+# Add the drop-in Switch (reference skeuomorphic treatment by default)
+npx shadcn@latest add https://raw.githubusercontent.com/HugoAlmeidaMoreira/ui-registry-vectorized/main/public/r/switch.json
+
 # Or when hosted on your custom domain
 npx shadcn@latest add https://ui.vectorized.pt/r/custom-switch.json
 ```
@@ -23,7 +26,7 @@ Add the registry to your project's `components.json`:
 ```json
 {
   "registries": {
-    "@vectorized": "https://ui.vectorized.pt/r"
+    "@vectorized": "https://ui.vectorized.pt/r/{name}.json"
   }
 }
 ```
@@ -32,6 +35,7 @@ Then install components by namespace:
 
 ```bash
 npx shadcn@latest add @vectorized/custom-switch
+npx shadcn@latest add @vectorized/switch
 ```
 
 ---
@@ -40,9 +44,11 @@ npx shadcn@latest add @vectorized/custom-switch
 
 | Component | Identifier | Description |
 |---|---|---|
-| **Custom Switch** | `custom-switch` | Switch with `sm`, `md`, `lg` sizes, color variants, thumb icons, and loading indicator. |
-| **Switch** | `switch` | Enhanced drop-in replacement for standard shadcn switch. |
+| **Custom Switch** | `custom-switch` | Radix switch with `sm`, `md`, `lg` sizes, color variants, thumb icons, loading indicator, and the reference skeuomorphic appearance. |
+| **Switch** | `switch` | Radix-backed drop-in switch with the reference skeuomorphic treatment (or compact shadcn appearance). |
 | **Utils** | `utils` | Standard `cn` helper combining `clsx` and `tailwind-merge`. |
+
+`Switch` uses the reference treatment by default. Set `appearance="default"` for the compact shadcn treatment.
 
 ---
 
@@ -51,6 +57,9 @@ npx shadcn@latest add @vectorized/custom-switch
 ```bash
 # Install dependencies
 npm install
+
+# Start the interactive switch preview at http://localhost:2210
+npm run dev
 
 # Build registry JSONs to public/r/
 npm run build

@@ -72,6 +72,8 @@ Run both before calling any non-trivial change done.
 4. **Clean Dependencies**: Explicitly declare all runtime `dependencies` and `registryDependencies` in `registry/schema.ts`.
 5. **No Hardcoded Themes**: Rely on standard semantic Tailwind variables (`bg-primary`, `text-muted-foreground`, `ring-ring`, `bg-background`) so components adapt effortlessly to dark mode and custom palettes.
 
+6. **Geometry-First UI Sizing**: Treat geometry-heavy UI components as a mathematical problem before writing CSS. Start with the reference canvas `(W₀, H₀)` and target canvas `(W₁, H₁)`, then calculate `sₓ = W₁ / W₀` and `sᵧ = H₁ / H₀`. Use a uniform scale `s = min(sₓ, sᵧ)` when the aspect ratio must be preserved. For every nested point relative to an origin `(oₓ, oᵧ)`, calculate `x′ = oₓ + sₓ(x - oₓ)` and `y′ = oᵧ + sᵧ(y - oᵧ)`; apply the same factors to widths, heights, offsets, radii, and visual effects. Use `transform: scale(sₓ, sᵧ)` with an explicit `transform-origin` when the whole reference canvas is being resized, or percentage/`calc()` values when children must resolve against a containing block. Use a short Python or JavaScript calculation for non-trivial resizes, record the resulting scale table in the implementation, and verify the rendered `getBoundingClientRect()` plus keyboard and ARIA behavior. Do not replace a geometric resize with unrelated hand-tuned pixel nudges.
+
 ---
 
 ## How to Add a New Component

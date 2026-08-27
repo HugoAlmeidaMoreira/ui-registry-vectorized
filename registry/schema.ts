@@ -33,14 +33,14 @@ export const registry: RegistryItem[] = [
     type: "registry:ui",
     title: "Custom Switch",
     description:
-      "A versatile switch control with sizes (sm, md, lg), color variants, thumb icons, and loading state.",
+      "A versatile Radix switch with sm/md/lg sizes, semantic color variants, thumb icons, loading state, and the reference skeuomorphic appearance.",
     dependencies: [
       "@radix-ui/react-switch",
       "class-variance-authority",
       "clsx",
       "tailwind-merge"
     ],
-    registryDependencies: ["utils"],
+    registryDependencies: ["@vectorized/utils"],
     files: [
       {
         path: "registry/ui/custom-switch.tsx",
@@ -55,14 +55,14 @@ export const registry: RegistryItem[] = [
     type: "registry:ui",
     title: "Switch",
     description:
-      "Enhanced drop-in replacement for the default shadcn switch component.",
+      "Radix-backed drop-in switch with the reference skeuomorphic treatment and an optional compact shadcn appearance.",
     dependencies: [
       "@radix-ui/react-switch",
       "class-variance-authority",
       "clsx",
       "tailwind-merge"
     ],
-    registryDependencies: ["custom-switch"],
+    registryDependencies: ["@vectorized/custom-switch"],
     files: [
       {
         path: "registry/ui/switch.tsx",
