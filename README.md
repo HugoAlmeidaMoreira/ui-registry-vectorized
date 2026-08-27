@@ -9,14 +9,14 @@ Custom, accessible shadcn/ui Component Registry for Vectorized and shared projec
 You can add any component directly to your project using the shadcn CLI:
 
 ```bash
-# Add custom switch (with size variants, icons, and loading state)
-npx shadcn@latest add https://raw.githubusercontent.com/HugoAlmeidaMoreira/ui-registry-vectorized/main/public/r/custom-switch.json
+# Add the Vectorized switch primitive (sizes, variants, icons, loading state)
+npx shadcn@latest add https://raw.githubusercontent.com/HugoAlmeidaMoreira/ui-registry-vectorized/main/public/r/switch-vectorized.json
 
 # Add the drop-in Switch (reference skeuomorphic treatment by default)
 npx shadcn@latest add https://raw.githubusercontent.com/HugoAlmeidaMoreira/ui-registry-vectorized/main/public/r/switch.json
 
 # Or when hosted on your custom domain
-npx shadcn@latest add https://ui.vectorized.pt/r/custom-switch.json
+npx shadcn@latest add https://ui.vectorized.pt/r/switch-vectorized.json
 ```
 
 ### 2. Configure as a Registry in `components.json`
@@ -34,7 +34,7 @@ Add the registry to your project's `components.json`:
 Then install components by namespace:
 
 ```bash
-npx shadcn@latest add @vectorized/custom-switch
+npx shadcn@latest add @vectorized/switch-vectorized
 npx shadcn@latest add @vectorized/switch
 ```
 
@@ -44,7 +44,7 @@ npx shadcn@latest add @vectorized/switch
 
 | Component | Identifier | Description |
 |---|---|---|
-| **Custom Switch** | `custom-switch` | Radix switch with `sm`, `md`, `lg` sizes, color variants, thumb icons, loading indicator, and the reference skeuomorphic appearance. |
+| **Switch Vectorized** | `switch-vectorized` | Radix switch with `sm`, `md`, `lg` sizes, color variants, thumb icons, loading indicator, and the reference skeuomorphic appearance. |
 | **Switch** | `switch` | Radix-backed drop-in switch with the reference skeuomorphic treatment (or compact shadcn appearance). |
 | **Utils** | `utils` | Standard `cn` helper combining `clsx` and `tailwind-merge`. |
 

@@ -29,9 +29,9 @@ export interface RegistryItem {
 
 export const registry: RegistryItem[] = [
   {
-    name: "custom-switch",
+    name: "switch-vectorized",
     type: "registry:ui",
-    title: "Custom Switch",
+    title: "Switch Vectorized",
     description:
       "A versatile Radix switch with sm/md/lg sizes, semantic color variants, thumb icons, loading state, and the reference skeuomorphic appearance.",
     dependencies: [
@@ -43,9 +43,9 @@ export const registry: RegistryItem[] = [
     registryDependencies: ["@vectorized/utils"],
     files: [
       {
-        path: "registry/ui/custom-switch.tsx",
+        path: "registry/ui/switch-vectorized.tsx",
         type: "registry:ui",
-        target: "components/ui/custom-switch.tsx"
+        target: "components/ui/switch-vectorized.tsx"
       }
     ],
     categories: ["inputs", "primitives"]
@@ -62,7 +62,7 @@ export const registry: RegistryItem[] = [
       "clsx",
       "tailwind-merge"
     ],
-    registryDependencies: ["@vectorized/custom-switch"],
+    registryDependencies: ["@vectorized/switch-vectorized"],
     files: [
       {
         path: "registry/ui/switch.tsx",

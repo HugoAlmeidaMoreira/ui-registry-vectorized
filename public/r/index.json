@@ -5,9 +5,9 @@
   "items": [
     {
       "$schema": "https://ui.shadcn.com/schema/registry-item.json",
-      "name": "custom-switch",
+      "name": "switch-vectorized",
       "type": "registry:ui",
-      "title": "Custom Switch",
+      "title": "Switch Vectorized",
       "description": "A versatile Radix switch with sm/md/lg sizes, semantic color variants, thumb icons, loading state, and the reference skeuomorphic appearance.",
       "dependencies": [
         "@radix-ui/react-switch",
@@ -36,7 +36,7 @@
         "tailwind-merge"
       ],
       "registryDependencies": [
-        "@vectorized/custom-switch"
+        "@vectorized/switch-vectorized"
       ],
       "categories": [
         "inputs",

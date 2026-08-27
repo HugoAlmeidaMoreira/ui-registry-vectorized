@@ -48,7 +48,7 @@ const switchVariants = cva(
     ],
     defaultVariants: {
       size: "md",
-      variant: "default",
+      variant: "success",
       appearance: "reference",
     },
   }
@@ -107,7 +107,7 @@ const trackInnerVariants = cva(
     },
     defaultVariants: {
       appearance: "reference",
-      variant: "default",
+      variant: "success",
     },
   }
 )
@@ -134,7 +134,7 @@ const thumbVariants = cva(
   }
 )
 
-export interface CustomSwitchProps
+export interface SwitchVectorizedProps
   extends React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>,
     VariantProps<typeof switchVariants> {
   /**
@@ -160,9 +160,9 @@ export interface CustomSwitchProps
   appearance?: "default" | "reference"
 }
 
-export const CustomSwitch = React.forwardRef<
+export const SwitchVectorized = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
-  CustomSwitchProps
+  SwitchVectorizedProps
 >(
   (
     {
@@ -279,4 +279,4 @@ export const CustomSwitch = React.forwardRef<
   }
 )
 
-CustomSwitch.displayName = "CustomSwitch"
+SwitchVectorized.displayName = "SwitchVectorized"

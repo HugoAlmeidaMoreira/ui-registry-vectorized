@@ -11,14 +11,14 @@
     "tailwind-merge"
   ],
   "registryDependencies": [
-    "@vectorized/custom-switch"
+    "@vectorized/switch-vectorized"
   ],
   "files": [
     {
       "path": "registry/ui/switch.tsx",
       "type": "registry:ui",
       "target": "components/ui/switch.tsx",
-      "content": "import * as React from \"react\"\nimport {\n  CustomSwitch,\n  type CustomSwitchProps,\n} from \"@/components/ui/custom-switch\"\n\nexport type SwitchProps = CustomSwitchProps\n\n/**\n * Radix-backed drop-in switch with the reference skeuomorphic treatment enabled\n * by default. Pass `appearance=\"default\"` for the compact shadcn treatment.\n */\nexport const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(\n  ({ appearance = \"reference\", ...props }, ref) => (\n    <CustomSwitch ref={ref} appearance={appearance} {...props} />\n  )\n)\n\nSwitch.displayName = \"Switch\"\n"
+      "content": "import * as React from \"react\"\nimport {\n  SwitchVectorized,\n  type SwitchVectorizedProps,\n} from \"@/components/ui/switch-vectorized\"\n\nexport type SwitchProps = SwitchVectorizedProps\n\n/**\n * Radix-backed drop-in switch with the reference skeuomorphic treatment enabled\n * by default. Pass `appearance=\"default\"` for the compact shadcn treatment.\n */\nexport const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(\n  ({ appearance = \"reference\", ...props }, ref) => (\n    <SwitchVectorized ref={ref} appearance={appearance} {...props} />\n  )\n)\n\nSwitch.displayName = \"Switch\"\n"
     }
   ],
   "categories": [

@@ -41,21 +41,26 @@ Run both before calling any non-trivial change done.
 .
 ├── registry/
 │   ├── lib/
-│   │   └── utils.ts            # Local utils for registry components
+│   │   └── utils.ts               # Local utils for registry components
 │   ├── ui/
-│   │   ├── custom-switch.tsx   # Custom switch primitive
-│   │   └── switch.tsx          # Drop-in replacement
-│   └── schema.ts               # Registry schema definitions and items list
+│   │   ├── switch-vectorized.tsx  # Vectorized switch primitive
+│   │   └── switch.tsx             # Drop-in replacement
+│   └── schema.ts                  # Registry schema definitions and items list
 ├── scripts/
-│   └── build-registry.ts       # Compiler from registry/ -> public/r/*.json
+│   └── build-registry.ts          # Compiler from registry/ -> public/r/*.json
+├── preview/                       # Vite preview app (npm run dev, port 2210)
+├── landing/
+│   └── switch.txt                 # Original CSS the reference treatment is ported from
 ├── public/
 │   └── r/
-│       ├── index.json          # Complete registry catalog
-│       ├── custom-switch.json  # Distribution JSON for custom-switch
-│       ├── switch.json         # Distribution JSON for switch
-│       └── utils.json          # Distribution JSON for utils
+│       ├── index.json             # Complete registry catalog
+│       ├── switch-vectorized.json # Distribution JSON for switch-vectorized
+│       ├── switch.json            # Distribution JSON for switch
+│       └── utils.json             # Distribution JSON for utils
 ├── dev/
 │   └── handover-2026-08-27-ui-registry.md
+├── index.html
+├── vite.config.ts
 ├── AGENTS.md
 └── README.md
 ```

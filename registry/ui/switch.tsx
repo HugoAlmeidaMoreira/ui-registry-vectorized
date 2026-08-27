@@ -1,10 +1,10 @@
 import * as React from "react"
 import {
-  CustomSwitch,
-  type CustomSwitchProps,
-} from "@/registry/ui/custom-switch"
+  SwitchVectorized,
+  type SwitchVectorizedProps,
+} from "@/registry/ui/switch-vectorized"
 
-export type SwitchProps = CustomSwitchProps
+export type SwitchProps = SwitchVectorizedProps
 
 /**
  * Radix-backed drop-in switch with the reference skeuomorphic treatment enabled
@@ -12,7 +12,7 @@ export type SwitchProps = CustomSwitchProps
  */
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
   ({ appearance = "reference", ...props }, ref) => (
-    <CustomSwitch ref={ref} appearance={appearance} {...props} />
+    <SwitchVectorized ref={ref} appearance={appearance} {...props} />
   )
 )
 
