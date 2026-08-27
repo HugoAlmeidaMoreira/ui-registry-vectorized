@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "custom-switch",
+  "type": "registry:ui",
+  "title": "Custom Switch",
+  "description": "A versatile switch control with sizes (sm, md, lg), color variants, thumb icons, and loading state.",
+  "dependencies": [
+    "@radix-ui/react-switch",
+    "class-variance-authority",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/custom-switch.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/custom-switch.tsx",
+      "content": "import * as React from \"react\"\nimport * as SwitchPrimitives from \"@radix-ui/react-switch\"\nimport { cva, type VariantProps } from \"class-variance-authority\"\nimport { cn } from \"@/lib/utils\"\n\nconst switchVariants = cva(\n  \"peer inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50\",\n  {\n    variants: {\n      size: {\n        sm: \"h-4 w-7\",\n        md: \"h-6 w-11\",\n        lg: \"h-7 w-14\",\n      },\n      variant: {\n        default: \"data-[state=checked]:bg-primary data-[state=unchecked]:bg-input\",\n        success: \"data-[state=checked]:bg-emerald-600 data-[state=unchecked]:bg-input\",\n        warning: \"data-[state=checked]:bg-amber-600 data-[state=unchecked]:bg-input\",\n        destructive: \"data-[state=checked]:bg-destructive data-[state=unchecked]:bg-input\",\n      },\n    },\n    defaultVariants: {\n      size: \"md\",\n      variant: \"default\",\n    },\n  }\n)\n\nconst thumbVariants = cva(\n  \"pointer-events-none flex items-center justify-center rounded-full bg-background shadow-sm ring-0 transition-transform\",\n  {\n    variants: {\n      size: {\n        sm: \"h-3 w-3 data-[state=checked]:translate-x-3 data-[state=unchecked]:translate-x-0 [&_svg]:size-2\",\n        md: \"h-5 w-5 data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0 [&_svg]:size-3\",\n        lg: \"h-6 w-6 data-[state=checked]:translate-x-7 data-[state=unchecked]:translate-x-0 [&_svg]:size-3.5\",\n      },\n    },\n    defaultVariants: {\n      size: \"md\",\n    },\n  }\n)\n\nexport interface CustomSwitchProps\n  extends React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>,\n    VariantProps<typeof switchVariants> {\n  /**\n   * Element or render function to display inside the moving thumb.\n   */\n  thumbIcon?: React.ReactNode | ((checked: boolean) => React.ReactNode)\n  /**\n   * Icon displayed when checked (state = true).\n   */\n  checkedIcon?: React.ReactNode\n  /**\n   * Icon displayed when unchecked (state = false).\n   */\n  uncheckedIcon?: React.ReactNode\n  /**\n   * If true, shows a subtle spinner and prevents interaction.\n   */\n  loading?: boolean\n}\n\nexport const CustomSwitch = React.forwardRef<\n  React.ElementRef<typeof SwitchPrimitives.Root>,\n  CustomSwitchProps\n>(\n  (\n    {\n      className,\n      size,\n      variant,\n      thumbIcon,\n      checkedIcon,\n      uncheckedIcon,\n      loading = false,\n      disabled,\n      checked,\n      defaultChecked,\n      onCheckedChange,\n      ...props\n    },\n    ref\n  ) => {\n    const isControlled = checked !== undefined\n    const [internalChecked, setInternalChecked] = React.useState<boolean>(\n      defaultChecked ?? false\n    )\n\n    const isChecked = isControlled ? Boolean(checked) : internalChecked\n\n    const handleChange = (newChecked: boolean) => {\n      if (loading) return\n      if (!isControlled) {\n        setInternalChecked(newChecked)\n      }\n      onCheckedChange?.(newChecked)\n    }\n\n    let renderedIcon: React.ReactNode = null\n    if (loading) {\n      renderedIcon = (\n        <svg\n          className=\"animate-spin text-muted-foreground\"\n          xmlns=\"http://www.w3.org/2000/svg\"\n          fill=\"none\"\n          viewBox=\"0 0 24 24\"\n        >\n          <circle\n            className=\"opacity-25\"\n            cx=\"12\"\n            cy=\"12\"\n            r=\"10\"\n            stroke=\"currentColor\"\n            strokeWidth=\"4\"\n          />\n          <path\n            className=\"opacity-75\"\n            fill=\"currentColor\"\n            d=\"M4 12a8 8 0 018-8v8H4z\"\n          />\n        </svg>\n      )\n    } else if (typeof thumbIcon === \"function\") {\n      renderedIcon = thumbIcon(isChecked)\n    } else if (thumbIcon) {\n      renderedIcon = thumbIcon\n    } else if (isChecked && checkedIcon) {\n      renderedIcon = checkedIcon\n    } else if (!isChecked && uncheckedIcon) {\n      renderedIcon = uncheckedIcon\n    }\n\n    return (\n      <SwitchPrimitives.Root\n        className={cn(switchVariants({ size, variant, className }))}\n        checked={isChecked}\n        onCheckedChange={handleChange}\n        disabled={disabled || loading}\n        aria-busy={loading || undefined}\n        ref={ref}\n        {...props}\n      >\n        <SwitchPrimitives.Thumb className={cn(thumbVariants({ size }))}>\n          {renderedIcon}\n        </SwitchPrimitives.Thumb>\n      </SwitchPrimitives.Root>\n    )\n  }\n)\n\nCustomSwitch.displayName = \"CustomSwitch\"\n"
+    }
+  ],
+  "categories": [
+    "inputs",
+    "primitives"
+  ]
+}
